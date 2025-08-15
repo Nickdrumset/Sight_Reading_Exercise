@@ -1,0 +1,10 @@
+{
+  "maxScale": 1.35,
+  "minScale": 0.4,
+  "bottomMarginPx": 16,
+  "safePadPx": 4,
+  "paletteMarginPx": 100,
+  "paletteZIndex": 3,
+  "stageZIndex": 1,
+  "centerHorizontally": true
+}
