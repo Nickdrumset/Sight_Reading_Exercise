@@ -1,3 +1,7 @@
+
+
+
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -30,7 +34,7 @@
   .btn.danger{background:linear-gradient(180deg,#ff6464,#d64545);border-color:rgba(0,0,0,.25);color:#2b0c0c;font-weight:800}
   .counter{display:inline-flex;align-items:center;gap:6px;border:1px solid #2b3860;border-radius:8px;padding:4px 8px;background:#101739}
   .value{min-width:40px;text-align:center;font-variant-numeric:tabular-nums;font-weight:800}
-  .mode-toggle{display:inline-flex;border:1px solid #2b3860;border-radius:10px;overflow:hidden;margin-right:8px}
+  .mode-toggle{display:inline-flex;border:1px solid #2b3860;border-radius:10px;overflow:hidden;margin-right:1px}
   .mode-toggle button{padding:8px 14px;background:#111934;border:0;color:var(--text);cursor:pointer}
   .mode-toggle button.active{background:#1d2a56;font-weight:800}
 
@@ -66,6 +70,156 @@
   .swatch .thumb img{height:72px;width:auto;display:block}
   .swatch .n{font-size:12px;color:#9fb2ff}
   .dimmed{opacity:.45;pointer-events:none}
+</style>
+<!-- === Nick Drum Challenge 모티브 색상/질감 오버레이 (기능 변경 없음) === -->
+<style id="ndc-theme-overlay">
+  :root{
+    /* Nick Drum Challenge 톤 */
+    --ndc-bg-grad: linear-gradient(135deg, #bfeee3 0%, #ffd8ba 50%, #bcd9f5 100%);
+    --ndc-card: rgba(255,255,255,0.65);
+    --ndc-card-soft: rgba(245,248,250,.85);
+    --ndc-text: #1c2c38;
+    --ndc-sub: #385858;
+    --ndc-border: rgba(100,150,200,.22);
+    --ndc-border-strong: rgba(100,150,200,.35);
+    --ndc-badge: rgba(200,230,250,.32);
+    --ndc-shadow-1: 0 12px 28px rgba(100,150,200,.22);
+    --ndc-shadow-2: 0 8px 18px rgba(100,150,200,.18);
+    --ndc-hover-bg: rgba(200,230,250,0.15);
+    --ndc-accent-1: #3fb3ff; /* 라이트블루 */
+    --ndc-accent-2: #ff914d; /* 오렌지 포인트 */
+  }
+
+  /* 전체 배경/문자색 전환 */
+  body{
+    background: var(--ndc-bg-grad) fixed !important;
+    color: var(--ndc-text) !important;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Title style from Nick Drum Challenge */
+  header h1{
+    background: linear-gradient(90deg, #ffffff, #cfeae1) !important;
+    -webkit-background-clip: text; 
+    background-clip: text; 
+    color: transparent !important;
+    -webkit-text-fill-color: transparent;
+    -webkit-text-stroke: 1px black;
+  }
+
+  /* 상단 컨트롤 패널을 유리 카드 느낌으로 */
+  .panel{
+    background: var(--ndc-card) !important;
+    backdrop-filter: blur(8px);
+    border: 0 !important;
+    box-shadow: var(--ndc-shadow-1) !important;
+    border-radius: 16px !important;
+  }
+
+  /* 라벨/힌트 색상 */
+  .label, .hint{ color: var(--ndc-sub) !important; }
+
+  /* 세그먼트 버튼(난이도) */
+  .seg{ background: var(--ndc-card-soft) !important; border: 0 !important; }
+  .seg button{
+    background: transparent !important;
+    color: var(--ndc-text) !important;
+    border: 1px solid var(--ndc-border) !important;
+    border-radius: 12px !important;
+  }
+  .seg button:hover{
+    background: var(--ndc-hover-bg) !important;
+    border-color: var(--ndc-border-strong) !important;
+  }
+  .seg button.active{
+    background: linear-gradient(135deg, rgba(255,145,77,.25), rgba(63,179,255,.25)) !important;
+    border-color: var(--ndc-border-strong) !important;
+  }
+
+  /* 드롭다운/일반 버튼 공통 */
+  select, .btn, .counter{
+    background: var(--ndc-card-soft) !important;
+    color: var(--ndc-text) !important;
+    border: 1px solid var(--ndc-border) !important;
+    border-radius: 12px !important;
+    box-shadow: 0 4px 12px rgba(100,150,200,0.10) !important;
+  }
+  .btn:hover, select:hover{
+    background: var(--ndc-hover-bg) !important;
+    border-color: var(--ndc-border-strong) !important;
+  }
+
+  /* Check(채점) 버튼만 포인트 강조 */
+  .btn.btn-check{
+    background: linear-gradient(135deg, var(--ndc-accent-2), var(--ndc-accent-1)) !important;
+    color:#fff !important; border:none !important; font-weight:700 !important;
+  }
+
+  /* 시스템/마디 박스(그리드 카드) */
+  #systems{ /* 섹션 간 여백/정돈만 */
+  }
+  .bar{
+    background: var(--ndc-card) !important;
+    border: 0 !important;
+    border-radius: 14px !important;
+    box-shadow: var(--ndc-shadow-2) !important;
+  }
+  .barTitle{
+    color: var(--ndc-sub) !important;
+  }
+  .barTitle:hover{
+    background: var(--ndc-hover-bg) !important;
+    border-radius: 8px !important;
+  }
+
+  /* 슬롯(셀) – 밝은 카드 + 경계 */
+  .cell{
+    background: rgba(255,255,255,0.9) !important;
+    border: 1px solid var(--ndc-border) !important;
+    border-radius: 12px !important;
+    box-shadow: 0 6px 16px rgba(100,150,200,.12) inset !important;
+  }
+  .cell.empty{ opacity: .55 !important; }
+  .cell.playing{
+    outline: 2px solid var(--ndc-accent-1) !important;
+    box-shadow: 0 0 0 3px rgba(63,179,255,.22) inset !important;
+  }
+
+  /* 팔레트 패널/스와치 */
+  #palettePanel .paletteRow{ /* 그리드 유지, 톤만 */
+  }
+  .swatch{
+    background: var(--ndc-card-soft) !important;
+    border: 1px solid var(--ndc-border) !important;
+    border-radius: 12px !important;
+    box-shadow: 0 6px 16px rgba(100,150,200,.10) !important;
+    color: var(--ndc-text) !important;
+  }
+  .swatch .n{ color: var(--ndc-sub) !important; }
+  .swatch:hover{
+    background: var(--ndc-hover-bg) !important;
+    border-color: var(--ndc-border-strong) !important;
+  }
+  .swatch.active{
+    outline: 2px solid var(--ndc-accent-1) !important;
+    box-shadow: 0 0 0 3px rgba(63,179,255,.22) inset !important;
+  }
+
+</style>
+</style>
+<style id="ndc-theme-overlay">
+header h1{
+  font-size: 3em !important;           /* 크기 2배 */
+  color: #ffffff !important;           /* 흰색 텍스트 */
+  -webkit-text-stroke: 1px black;      /* 외곽선 (WebKit) */
+  text-stroke: 1px black;              /* 외곽선 (표준 시도) */
+  background: none !important;         /* 그라데이션 제거 */
+  -webkit-background-clip: initial !important; /* 마스킹 해제 */
+  background-clip: initial !important;          /* 마스킹 해제 */
+  -webkit-text-fill-color: initial !important;  /* 마스킹 해제 */
+}
+</style>
 </style>
 </head>
 <body>
@@ -443,30 +597,8 @@
     }
   }
 
-  // Responsive scaling (same as v41)
-  const SCALE_MULT = 1.35;
-  function autoFit(force=false){
-    const container = document.querySelector('main');
-    const systemsEl = document.getElementById('systems');
-    const maxW = container.clientWidth - 24;
-    if(!systemsEl.children.length) return;
-
-    const rect = systemsEl.getBoundingClientRect();
-    const curW = rect.width, curH = rect.height;
-
-    const headerH = document.querySelector('header').getBoundingClientRect().height;
-    const controlsH = document.querySelectorAll('.panel')[0].getBoundingClientRect().height + 18;
-    const availableH = window.innerHeight - headerH - controlsH - 30;
-
-    const curNoteH = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--note-h')) || 96;
-    const scaleW = maxW / Math.max(1, curW);
-    const scaleH = availableH / Math.max(1, curH);
-    const scale = Math.max(0.4, Math.min(2.2, Math.min(scaleW, scaleH) * SCALE_MULT));
-    const newH = Math.max(48, Math.min(260, Math.round(96 * scale)));
-    if(force || Math.abs(newH - curNoteH) > 1) document.documentElement.style.setProperty('--note-h', newH + 'px');
-  }
-  window.addEventListener('resize', ()=> autoFit(true));
-  new ResizeObserver(()=> autoFit(true)).observe(document.querySelector('main'));
+  // Autoscale removed
+  // (Intentionally left blank to preserve script structure)
 
   // Controls
   document.getElementById('btnStart').addEventListener('click', start);
