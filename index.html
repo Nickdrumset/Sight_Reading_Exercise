@@ -52,10 +52,37 @@
   .mode-toggle .btn.mode.active{ background:#1d2a56; font-weight:800; }
 
   .systems{display:grid;row-gap:var(--system-gap)}
-  .system{display:flex;padding:0 10px;justify-content:center;gap:0;}
+  .system{
+    display:flex;
+    padding:0 10px;
+    justify-content:flex-start;   /* start at left so first notes aren't clipped */
+    gap:0;
+  }
 
-  .bar{position:relative;background:transparent;overflow:visible;width:max-content;margin:0;padding:0;z-index:0;}
-  .barClip{ position:relative;background:var(--note-bg); overflow:hidden; padding:0 6px; border-radius:0; }
+  .bar{
+    position:relative;
+    background:transparent;
+    overflow:visible;
+    /* Ensure the bar box never exceeds the background/clip width */
+    width:auto;
+    max-width:100%;
+    margin:0;
+    padding:0;
+    z-index:0;
+    box-sizing:border-box;
+  }
+  .barClip{
+    position:relative;
+    background:var(--note-bg);
+    /* Make the background define the width; bar fits to this */
+    width:100%;
+    overflow-x:auto;            /* allow internal horizontal scroll instead of clipping */
+    overflow-y:hidden;
+    -webkit-overflow-scrolling: touch; /* smooth scroll on iOS */
+    padding:0 8px 0 10px;       /* small left pad to avoid visual clipping at the edge */
+    border-radius:0;
+    box-sizing:border-box;
+  }
   .bar.round-left  .barClip{ border-top-left-radius:var(--round-r); border-bottom-left-radius:var(--round-r); }
   .bar.round-right .barClip{ border-top-right-radius:var(--round-r); border-bottom-right-radius:var(--round-r); }
 
@@ -63,6 +90,7 @@
   .bar.leftline .barClip::before{content:"";position:absolute;top:0;left:0;bottom:0;width:var(--barline-w);background:var(--barline)}
 
   .strip{display:flex;gap:0;padding:0;margin:0;position:relative}
+  .strip{ min-width: max-content; }
   .note{display:block;line-height:0;padding:0;margin:0;position:relative;cursor:pointer;z-index:0;user-select:none}
   .note img{display:block;height:var(--note-h);width:auto;margin:0;padding:0;user-select:none;pointer-events:none}
 
@@ -245,7 +273,6 @@
   }
 
 </style>
-</style>
 <style id="ndc-theme-overlay">
 header h1{
   font-size: 3em !important;           /* 크기 2배 */
@@ -258,7 +285,7 @@ header h1{
   -webkit-text-fill-color: initial !important;  /* 마스킹 해제 */
 }
 </style>
-</style>
+
 </head>
 <body>
 <button id="fsBtn" class="fs-btn" aria-label="전체화면 전환 (F)" title="전체화면 전환 (F)" aria-pressed="false">
