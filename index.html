@@ -273,7 +273,7 @@
 </style>
 <style id="ndc-theme-overlay">
 header h1{
-  font-size: clamp(20px, 3.8vw, 34px) !important; /* Beat Maker와 동일한 크기 */
+  font-size: clamp(25px, 4.75vw, 42.5px) !important; /* 기존 대비 25% 크게 */
   color: #ffffff !important;           /* 흰색 텍스트 */
   -webkit-text-stroke: 1px black;      /* 외곽선 (WebKit) */
   text-stroke: 1px black;              /* 외곽선 (표준 시도) */
@@ -291,6 +291,28 @@ header h1{
     margin-left: auto;
     margin-right: auto;
   }
+}
+</style>
+<style id="portrait-compact-controls">
+/* 세로(포트레이트) 화면에서 제어 박스와 타일을 2/3 크기로 축소 */
+@media (orientation: portrait) {
+  /* 상단 제어 패널의 버튼/셀렉트/카운터 */
+  .panel .btn { padding: calc(8px * .66) calc(13px * .66); font-size: .66em; }
+  .panel select { padding: calc(6px * .66) calc(8px * .66); font-size: .66em; }
+  .panel .counter { transform: scale(.66); transform-origin: center; }
+  .panel .counter .value { min-width: calc(40px * .66); font-size: .66em; }
+  .mode-toggle .btn.mode { padding: calc(8px * .66) calc(13px * .66); }
+
+  /* 팔레트(0~15 타일) 축소 */
+  #palettePanel .swatch { padding: calc(8px * .66); }
+  #palettePanel .swatch .thumb img {
+    height: auto !important;
+    max-height: 48px !important; /* 72px → 48px (2/3) */
+    width: auto;
+    max-width: 100%;
+    display: block;
+  }
+  #palettePanel .paletteRow { gap: calc(10px * .66); grid-template-columns: repeat(auto-fit, minmax(48px, 1fr)); }
 }
 </style>
 </head>
