@@ -14,13 +14,13 @@
   :root{
     --bg:#0f1220; --panel:#11162a; --text:#e8eaf6; --sub:#b3b9d8;
     --barline:#000; --note-bg:#fff;
-    /* Responsive sizing via clamp(): min, preferred (vw), max */
-    --system-gap: clamp(4px, 2.2vw, 16px);
-    --note-h: clamp(32px, 9vw, 128px);
-    --barline-w: clamp(0.5px, 0.25vw, 2px);
+    /* Responsive sizing via clamp(): min, preferred (vmin), max */
+    --system-gap: clamp(4px, 2.2vmin, 16px);
+    --note-h:     clamp(32px, 15vmin, 128px);
+    --barline-w:  clamp(0.5px, 0.25vmin, 2px);
     --hl-color:#66cc33;
-    --hl-width: clamp(2px, 0.6vw, 6px);
-    --round-r: clamp(4px, 2vw, 16px);
+    --hl-width:   clamp(2px, 0.6vmin, 6px);
+    --round-r:    clamp(4px, 2vmin, 16px);
     --accent:#3fb3ff;
   }
   *{box-sizing:border-box}
@@ -87,7 +87,8 @@
   .bar.leftline .barClip::before{content:"";position:absolute;top:0;left:0;bottom:0;width:var(--barline-w);background:var(--barline)}
 
   .strip{display:flex;gap:0;padding:0;margin:0;position:relative}
-  .strip{ min-width: max-content; }
+  /* Let the strip shrink with its container so horizontal size responds immediately */
+  .strip{ width:100%; }
   .note{display:block;line-height:0;padding:0;margin:0;position:relative;cursor:pointer;z-index:0;user-select:none}
   .note img{display:block;height:var(--note-h);width:auto;margin:0;padding:0;user-select:none;pointer-events:none}
 
@@ -99,9 +100,23 @@
 
   .barTitle{position:absolute;top:-14px;left:0;font-size:11px;color:#3fb3ff}
 
-  /* Palette BELOW bars, 2 rows, bigger thumbs */
-  #palettePanel{margin-top:12px}
-  .paletteRow{display:grid;grid-template-columns:repeat(auto-fit,minmax(72px,1fr));gap:10px;margin-top:10px}
+  /* Palette: left-to-right flow with auto wrap */
+  #palettePanel {
+    display:flex !important;
+    flex-wrap:wrap !important;
+    justify-content:flex-start !important;
+    align-content:flex-start !important;
+    gap:10px !important;
+    overflow-x:visible !important;
+    margin-top:12px !important;
+  }
+  #palettePanel[style*="display:block"] {
+    display:flex !important;
+  }
+  /* Row wrappers become transparent so all swatches flow in one line */
+  .paletteRow{display:contents;margin-top:0}
+  /* Fix each swatch to a consistent width so the single-row layout is stable */
+  #palettePanel .swatch{flex:0 0 72px}
   .swatch{display:flex;flex-direction:column;align-items:center;gap:6px; padding:8px;border:1px solid #2b3860;border-radius:10px;background:#0f1427;cursor:pointer;user-select:none}
   .swatch.active{outline:2px solid var(--accent); box-shadow:0 0 0 3px rgba(63,179,255,.25) inset}
   .swatch .thumb{line-height:0}
@@ -291,6 +306,16 @@ header h1{
     margin-left: auto;
     margin-right: auto;
   }
+  .panel{
+    max-width: 70%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .systems{
+    max-width: 70%;
+    margin-left: auto;
+    margin-right: auto;
+  }
 }
 </style>
 <style id="portrait-compact-controls">
@@ -312,8 +337,17 @@ header h1{
     max-width: 100%;
     display: block;
   }
-  #palettePanel .paletteRow { gap: calc(10px * .66); grid-template-columns: repeat(auto-fit, minmax(48px, 1fr)); }
+  #palettePanel { gap: calc(10px * .66); }
 }
+</style>
+<style id="palette-mode-background">
+  /* Hide palette panel background in Study & Challenge modes */
+  body:has(#btnStudy.btn.mode[aria-selected="true"]) #palettePanel,
+  body:has(#btnChallenge.btn.mode[aria-selected="true"]) #palettePanel {
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+  }
 </style>
 </head>
 <body>
