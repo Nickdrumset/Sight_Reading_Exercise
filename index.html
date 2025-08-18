@@ -14,12 +14,13 @@
   :root{
     --bg:#0f1220; --panel:#11162a; --text:#e8eaf6; --sub:#b3b9d8;
     --barline:#000; --note-bg:#fff;
-    --system-gap:16px;
-    --note-h:96px;
-    --barline-w:2px;
+    /* Responsive sizing via clamp(): min, preferred (vw), max */
+    --system-gap: clamp(8px, 2.2vw, 16px);
+    --note-h: clamp(56px, 9vw, 128px);
+    --barline-w: clamp(1px, 0.25vw, 2px);
     --hl-color:#66cc33;
-    --hl-width:6px;
-    --round-r:15px;
+    --hl-width: clamp(3px, 0.6vw, 6px);
+    --round-r: clamp(8px, 2vw, 16px);
     --accent:#3fb3ff;
   }
   *{box-sizing:border-box}
@@ -285,7 +286,7 @@ header h1{
 /* 가로 화면에서 팔레트 박스 최대 폭을 ~70%로 제한하고 가운데 정렬 */
 @media (orientation: landscape) {
   #palettePanel{
-    max-width: 60%;
+    max-width: 70%;
     margin-left: auto;
     margin-right: auto;
   }
@@ -809,6 +810,5 @@ header h1{
   build();
 })();
 </script>
-<script src="autoFit_from_json.js"></script>
 </body>
 </html>
