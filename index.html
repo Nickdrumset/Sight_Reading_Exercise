@@ -14,13 +14,14 @@
   :root{
     --bg:#0f1220; --panel:#11162a; --text:#e8eaf6; --sub:#b3b9d8;
     --barline:#000; --note-bg:#fff;
-    /* Responsive sizing via clamp(): min, preferred (vmin), max */
-    --system-gap: clamp(4px, 2.2vmin, 16px);
-    --note-h:     clamp(32px, 15vmin, 128px);
-    --barline-w:  clamp(0.5px, 0.25vmin, 2px);
+    /* Responsive sizing via clamp(): min, preferred (vw), max */
+    --system-gap: clamp(4px, 2.2vw, 16px);
+    /* Make note height responsive from the widest viewport (avoid early cap at 128px) */
+    --note-h:     clamp(36px, 6vw, 200px);
+    --barline-w:  clamp(0.5px, 0.25vw, 2px);
     --hl-color:#66cc33;
-    --hl-width:   clamp(2px, 0.6vmin, 6px);
-    --round-r:    clamp(4px, 2vmin, 16px);
+    --hl-width:   clamp(2px, 0.6vw, 6px);
+    --round-r:    clamp(4px, 2vw, 16px);
     --accent:#3fb3ff;
   }
   *{box-sizing:border-box}
@@ -51,32 +52,38 @@
   .systems{display:grid;row-gap:var(--system-gap)}
   .system{
     display: flex;
+    width: 100%;               /* 시스템 전체가 항상 뷰포트 너비를 채움 */
     padding: 0 10px;
-    justify-content: center;   /* 중앙 정렬로 변경 */
+    justify-content: center;   /* 중앙 정렬 */
+    align-items: stretch;
     gap: 0;
+    box-sizing: border-box;
   }
 
   .bar{
     position:relative;
     background:transparent;
     overflow:visible;
-    /* Ensure the bar box never exceeds the background/clip width */
-    width:auto;
-    max-width:100%;
-    margin:0;
-    padding:0;
-    z-index:0;
-    box-sizing:border-box;
+    /* Make each bar share the row width equally and shrink immediately with the container */
+    flex: 1 1 0;
+    width: auto;
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+    z-index: 0;
+    box-sizing: border-box;
   }
   .barClip{
     position:relative;
     background:var(--note-bg);
-    /* Make the background define the width; bar fits to this */
+    /* Keep inner content centered within the background */
+    display:flex;               
+    justify-content:center;     
     width:100%;
-    overflow-x:auto;            /* allow internal horizontal scroll instead of clipping */
+    overflow-x:hidden;          
     overflow-y:hidden;
-    -webkit-overflow-scrolling: touch; /* smooth scroll on iOS */
-    padding:0 8px 0 10px;       /* small left pad to avoid visual clipping at the edge */
+    -webkit-overflow-scrolling: touch;
+    padding:0 8px;              
     border-radius:0;
     box-sizing:border-box;
   }
@@ -86,11 +93,50 @@
   .barClip::after{content:"";position:absolute;top:0;right:0;bottom:0;width:var(--barline-w);background:var(--barline)}
   .bar.leftline .barClip::before{content:"";position:absolute;top:0;left:0;bottom:0;width:var(--barline-w);background:var(--barline)}
 
-  .strip{display:flex;gap:0;padding:0;margin:0;position:relative}
-  /* Let the strip shrink with its container so horizontal size responds immediately */
-  .strip{ width:100%; }
-  .note{display:block;line-height:0;padding:0;margin:0;position:relative;cursor:pointer;z-index:0;user-select:none}
-  .note img{display:block;height:var(--note-h);width:auto;margin:0;padding:0;user-select:none;pointer-events:none}
+  .strip{
+    display:flex;
+    gap:0;
+    padding:0;
+    margin:0;
+    position:relative;
+    width:100%;                 
+    flex:1 1 100%;              /* ensure strip itself expands within barClip */
+    justify-content:flex-start;
+    align-items:flex-end;       
+  }
+  /* Make each slot span evenly across the bar */
+  .strip > .cell,
+  .strip > .slot{
+    flex: 1 1 0;
+    min-width: 0;
+    display: flex;
+    align-items: flex-end;      /* align notes to the bottom of the bar */
+    justify-content: center;    /* keep note graphic centered inside the slot */
+    box-sizing: border-box;
+  }
+  /* Fallback: make every direct child of .strip participate in equal filling */
+  .strip > *{
+    flex: 1 1 0 !important;
+    min-width: 0;
+  }
+  .note{
+    display:flex;               /* let content center within slot */
+    align-items:flex-end;       /* bottom align with bar baseline */
+    justify-content:center;     /* center image horizontally */
+    width:100%;
+    line-height:0;
+    padding:0;margin:0;
+    position:relative;
+    cursor:pointer;z-index:0;user-select:none
+  }
+  /* Make the note graphic scale with slot width, but don't exceed target height */
+  .note img{
+    display:block;
+    width:100%;                  /* take most of the slot width */
+    height:auto;                /* keep aspect ratio; grow with slot */
+    max-height:var(--note-h);   /* cap by global note height */
+    margin:0;padding:0;user-select:none;pointer-events:none
+  }
 
   .note.playing::after, .note.marked::after{
     content:""; position:absolute; inset:1px;
@@ -316,28 +362,6 @@ header h1{
     margin-left: auto;
     margin-right: auto;
   }
-}
-</style>
-<style id="portrait-compact-controls">
-/* 세로(포트레이트) 화면에서 제어 박스와 타일을 2/3 크기로 축소 */
-@media (orientation: portrait) {
-  /* 상단 제어 패널의 버튼/셀렉트/카운터 */
-  .panel .btn { padding: calc(8px * .66) calc(13px * .66); font-size: .66em; }
-  .panel select { padding: calc(6px * .66) calc(8px * .66); font-size: .66em; }
-  .panel .counter { transform: scale(.66); transform-origin: center; }
-  .panel .counter .value { min-width: calc(40px * .66); font-size: .66em; }
-  .mode-toggle .btn.mode { padding: calc(8px * .66) calc(13px * .66); }
-
-  /* 팔레트(0~15 타일) 축소 */
-  #palettePanel .swatch { padding: calc(8px * .66); }
-  #palettePanel .swatch .thumb img {
-    height: auto !important;
-    max-height: 48px !important; /* 72px → 48px (2/3) */
-    width: auto;
-    max-width: 100%;
-    display: block;
-  }
-  #palettePanel { gap: calc(10px * .66); }
 }
 </style>
 <style id="palette-mode-background">
