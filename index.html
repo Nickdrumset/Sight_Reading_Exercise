@@ -270,9 +270,10 @@
   }
 
 </style>
+</style>
 <style id="ndc-theme-overlay">
 header h1{
-  font-size: 3em !important;           /* 크기 2배 */
+  font-size: clamp(20px, 3.8vw, 34px) !important; /* Beat Maker와 동일한 크기 */
   color: #ffffff !important;           /* 흰색 텍스트 */
   -webkit-text-stroke: 1px black;      /* 외곽선 (WebKit) */
   text-stroke: 1px black;              /* 외곽선 (표준 시도) */
@@ -414,7 +415,7 @@ header h1{
   btn.addEventListener('click', toggleFullscreen);
 
   // Keyboard: 'f' toggles fullscreen, 'Esc' exits only
-  document.addEventListener('keydown', (e) => {
+document.addEventListener('keydown', (e) => {
     if (e.isComposing || e.repeat) return;
     const tag = (e.target && e.target.tagName) || '';
     if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || (e.target && e.target.isContentEditable)) return;
@@ -808,6 +809,26 @@ header h1{
   document.getElementById('level').value='1';
   setBPM(60);
   build();
+})();
+</script>
+<script>
+// ArrowLeft / ArrowRight → BPM 5단위 조절(기존 -5/+5 버튼을 클릭)
+(function(){
+  function clickById(id){
+    var el = document.getElementById(id);
+    if (el && typeof el.click === 'function') el.click();
+  }
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'ArrowLeft') {
+      e.preventDefault();
+      e.stopPropagation();
+      clickById('bpmMinus5');
+    } else if (e.key === 'ArrowRight') {
+      e.preventDefault();
+      e.stopPropagation();
+      clickById('bpmPlus5');
+    }
+  }, true); // capture 단계에서 가로채서 다른 핸들러보다 우선
 })();
 </script>
 </body>
