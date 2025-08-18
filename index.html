@@ -23,35 +23,9 @@
     --accent:#3fb3ff;
   }
   *{box-sizing:border-box}
-  /* Prevent horizontal overflow on narrow/portrait screens */
+  /* Prevent horizontal overflow. */
   html, body { width: 100%; max-width: 100%; overflow-x: hidden; }
   .panel, .systems, .system { max-width: 100vw; }
-  @media (orientation: portrait), (max-width: 768px) {
-    html, body { overflow-x: hidden; }
-    .panel, .systems, .system { max-width: 100vw; }
-
-    /* ✅ Portrait: scale note height & gaps to phone size */
-    :root{
-      /* Height of note images adapts to viewport: between 64px and 18% of viewport height,
-         primarily driven by viewport width for consistent look on phones */
-      --note-h: clamp(64px, 12vw, 18vh);
-      /* System (row) spacing slightly tighter on phones, responsive */
-      --system-gap: clamp(8px, 2.5vw, 14px);
-      /* Slightly smaller rounding on compact screens */
-      --round-r: 12px;
-    }
-
-    /* Ensure bars use full available width and comfortable padding on phones */
-    .system{ align-items: stretch; }
-    .bar{ width: 100%; }
-    .barClip{ padding: 0 6px 0 8px; }
-
-    /* Re-assert image height in case of overrides below */
-    .note img{ height: var(--note-h); }
-
-    /* Give a bit more breathing room at the bottom for phones with gesture areas */
-    main{ padding-bottom: max(16px, env(safe-area-inset-bottom)); }
-  }
   body{margin:0;background:#0f1220;color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
   header{padding:16px 12px 0;text-align:center}
   h1{margin:0 0 6px;font-size:clamp(20px,3.8vw,34px)}
@@ -75,10 +49,10 @@
 
   .systems{display:grid;row-gap:var(--system-gap)}
   .system{
-    display:flex;
-    padding:0 10px;
-    justify-content:flex-start;   /* start at left so first notes aren't clipped */
-    gap:0;
+    display: flex;
+    padding: 0 10px;
+    justify-content: center;   /* 중앙 정렬로 변경 */
+    gap: 0;
   }
 
   .bar{
@@ -307,7 +281,16 @@ header h1{
   -webkit-text-fill-color: initial !important;  /* 마스킹 해제 */
 }
 </style>
-
+<style id="palette-limit-landscape">
+/* 가로 화면에서 팔레트 박스 최대 폭을 ~70%로 제한하고 가운데 정렬 */
+@media (orientation: landscape) {
+  #palettePanel{
+    max-width: 60%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+</style>
 </head>
 <body>
 <button id="fsBtn" class="fs-btn" aria-label="전체화면 전환 (F)" title="전체화면 전환 (F)" aria-pressed="false">
